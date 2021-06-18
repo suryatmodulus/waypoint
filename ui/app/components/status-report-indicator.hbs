@@ -1,0 +1,22 @@
+{{#let
+  (downcase @statusReport.health.healthStatus)
+  @statusReport.health.healthMessage
+  @statusReport.status.completeTime
+  as |status message completeTime|
+}}
+  <span class="status-report-indicator status-report-indicator--{{status}}" tabindex="0">
+    <span class="status-report-indicator__badge"></span>
+
+    <span class="status-report-indicator__label">
+      {{t (concat "status_report_indicator.label." status)}}
+    </span>
+
+    <EmberTooltip>
+      {{message}}
+      <small>
+        Last checked
+        {{date-format-distance-to-now completeTime.seconds}}
+      </small>
+    </EmberTooltip>
+  </span>
+{{/let}}
