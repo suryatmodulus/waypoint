@@ -1,6 +1,6 @@
-import { ListProjectsResponse, GetProjectResponse } from 'waypoint-pb';
+import { ListProjectsResponse, GetProjectResponse, UpsertProjectResponse } from 'waypoint-pb';
 import { decode } from '../helpers/protobufs';
-import { GetProjectRequest } from 'waypoint-pb';
+import { GetProjectRequest, UpsertProjectRequest } from 'waypoint-pb';
 import { Request, Response } from 'miragejs';
 
 export function list(schema: any): Response {
@@ -17,6 +17,18 @@ export function get(schema: any, { requestBody }: Request): Response {
   let name = requestMsg.getProject().getProject();
   let model = schema.projects.findBy({ name });
   let resp = new GetProjectResponse();
+  let project = model?.toProtobuf();
+
+  resp.setProject(project);
+
+  return this.serialize(resp, 'application');
+}
+
+export function update(schema: any, { requestBody }: Request): Response {
+  let requestMsg = decode(UpsertProjectRequest, requestBody);
+  let name = requestMsg.getProject().getName();
+  let model = schema.projects.findBy({ name });
+  let resp = new UpsertProjectResponse();
   let project = model?.toProtobuf();
 
   resp.setProject(project);
